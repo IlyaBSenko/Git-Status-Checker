@@ -6,12 +6,17 @@
 # ^[^ ]  == staged but uncommited
 
 
-search_dir="/Users/ilyathegoat/PersonalProjects/" # change to what you want
+search_dir="$1" # command line argument for the path to search for
 
+# if search_dir is empty
+if [ -z "$search_dir" ]; then
+	echo "Usage: bash main.sh <directory>"
+	exit 1
+fi
 
-# find directories that are git repos
+# find directories that are git repos (now follows symlinks)
 find_repos() {
-	find "$search_dir" -type d -name .git 
+	find -L "$search_dir" -name .git 
 }
 
 # untracked files only
@@ -20,6 +25,8 @@ untracked() {
 		repo="${gitdir%/.git}"
 		if git -C "$repo" status --porcelain | grep -qE '^\?\?'; then
 			echo "$repo has untracked files"
+		else
+			echo "All good here"
 		fi
 	done
 } 
@@ -30,6 +37,8 @@ unstaged() {
 		repo="${gitdir%/.git}"
 		if git -C "$repo" status --porcelain | grep -qE '^.[^ ]'; then
 			echo "$repo has unadded files"
+		else
+			echo "All good here"
 		fi
 	done
 }
@@ -40,6 +49,8 @@ uncommitted() {
 		repo="${gitdir%/.git}"
 		if git -C "$repo" status --porcelain | grep -qE '^[^ ?]'; then # ?? technically matches so we need to eclude untracked files
 			echo "$repo has uncommitted files"
+		else
+			echo "All good here"
 		fi
 	done
 }
