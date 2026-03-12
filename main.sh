@@ -25,8 +25,6 @@ untracked() {
 		repo="${gitdir%/.git}"
 		if git -C "$repo" status --porcelain | grep -qE '^\?\?'; then
 			echo "$repo has untracked files"
-		else
-			echo "All good here"
 		fi
 	done
 } 
@@ -35,10 +33,8 @@ untracked() {
 unstaged() {
 	find_repos | while read -r gitdir; do
 		repo="${gitdir%/.git}"
-		if git -C "$repo" status --porcelain | grep -qE '^.[^ ]'; then
+		if ! git -C "$repo" diff --quiet; then # now checks for actual unstaged changes directly
 			echo "$repo has unadded files"
-		else
-			echo "All good here"
 		fi
 	done
 }
@@ -49,8 +45,6 @@ uncommitted() {
 		repo="${gitdir%/.git}"
 		if git -C "$repo" status --porcelain | grep -qE '^[^ ?]'; then # ?? technically matches so we need to eclude untracked files
 			echo "$repo has uncommitted files"
-		else
-			echo "All good here"
 		fi
 	done
 }
