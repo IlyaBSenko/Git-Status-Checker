@@ -14,9 +14,9 @@ if [ -z "$search_dir" ]; then
 	exit 1
 fi
 
-# find directories that are git repos (now follows symlinks)
+# find directories that are git repos 
 find_repos() {
-	find -L "$search_dir" -name .git 
+	find "$search_dir" -type d -name .git 
 }
 
 # untracked files only
