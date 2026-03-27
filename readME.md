@@ -2,4 +2,3 @@
 
 #### It can check specific directories or every directory from the root if you really want too
 
-#### To run the program run bash main.sh <path to directories you want to scan> 
